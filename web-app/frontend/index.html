@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoundArch - Acoustic Landscape Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>🔔 SoundArch</h1>
+                <p>Archaeological Acoustic Analysis</p>
+            </div>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#methodology">Methodology</a>
+                <a href="#references">References</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Application -->
+    <main>
+        <!-- Left Panel: Controls -->
+        <aside class="control-panel">
+            <section class="panel-section">
+                <h2>Sound Source</h2>
+                <div class="form-group">
+                    <label for="bell-type">Bell Type:</label>
+                    <select id="bell-type">
+                        <option value="small_bell">Small Bell (50-100 kg)</option>
+                        <option value="medium_bell" selected>Medium Bell (200-500 kg)</option>
+                        <option value="large_bell">Large Cathedral Bell (1000+ kg)</option>
+                        <option value="custom">Custom Source</option>
+                    </select>
+                </div>
+                <div id="bell-info" class="info-box">
+                    <p><strong>Source Level:</strong> <span id="source-level">115 dB</span> SPL @ 1m</p>
+                    <p><strong>Fundamental:</strong> <span id="fundamental-freq">300 Hz</span></p>
+                    <p><small id="bell-reference">ISO 9613-2:2024 reference</small></p>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h2>Environmental Parameters</h2>
+                <div class="form-group">
+                    <label for="temperature">Temperature (°C): <span id="temp-value">15</span></label>
+                    <input type="range" id="temperature" min="-20" max="40" value="15" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="humidity">Humidity (%): <span id="humidity-value">70</span></label>
+                    <input type="range" id="humidity" min="10" max="100" value="70" step="5">
+                </div>
+                <div class="form-group">
+                    <label for="ground-factor">Ground Type: <span id="ground-type">Mixed</span></label>
+                    <input type="range" id="ground-factor" min="0" max="1" value="0.5" step="0.1">
+                    <small>0 = Hard (concrete), 1 = Porous (grass/forest)</small>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h2>Heights</h2>
+                <div class="form-group">
+                    <label for="source-height">Source Height (m): <span id="source-height-value">10</span></label>
+                    <input type="range" id="source-height" min="0.1" max="100" value="10" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label for="receiver-height">Receiver Height (m): <span id="receiver-height-value">1.6</span></label>
+                    <input type="range" id="receiver-height" min="0.1" max="50" value="1.6" step="0.1">
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h2>Terrain Data</h2>
+                <button id="load-dem" class="btn-primary">Load DEM File</button>
+                <input type="file" id="dem-file" accept=".tif,.asc" style="display: none;">
+                <button id="use-sample-terrain" class="btn-secondary">Use Sample Terrain</button>
+                <div id="terrain-info" class="info-box" style="display: none;">
+                    <p><strong>Loaded:</strong> <span id="terrain-name">-</span></p>
+                    <p><strong>Size:</strong> <span id="terrain-size">-</span></p>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <button id="calculate-btn" class="btn-calculate" disabled>Calculate Propagation</button>
+                <button id="show-isophone" class="btn-secondary" disabled>Show Sound Contours</button>
+            </section>
+        </aside>
+
+        <!-- Center: 3D Visualization -->
+        <div class="visualization-container">
+            <div id="three-container"></div>
+            <div class="overlay-instructions">
+                <p>🖱️ Left-click: Place sound source | Right-click: Place receiver</p>
+                <p>🔄 Drag: Rotate | Scroll: Zoom | Middle: Pan</p>
+            </div>
+            <div id="calculation-status" class="status-overlay" style="display: none;">
+                <div class="status-content">
+                    <div class="spinner"></div>
+                    <p>Calculating acoustic propagation...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Results -->
+        <aside class="results-panel">
+            <section class="panel-section">
+                <h2>Propagation Results</h2>
+                <div id="results-content" class="results-empty">
+                    <p>Place source and receiver points to calculate</p>
+                </div>
+                <div id="results-data" style="display: none;">
+                    <div class="result-item">
+                        <h3>Distance</h3>
+                        <p class="result-value" id="result-distance">-</p>
+                    </div>
+                    <div class="result-item">
+                        <h3>Received Sound Level</h3>
+                        <p class="result-value" id="result-spl">-</p>
+                        <div class="spl-bar">
+                            <div id="spl-indicator" class="spl-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <h3>Audibility</h3>
+                        <p class="result-value" id="result-audible">-</p>
+                    </div>
+                    <div class="result-item">
+                        <h3>Max Audible Distance</h3>
+                        <p class="result-value" id="result-max-distance">-</p>
+                    </div>
+                    
+                    <h3>Attenuation Breakdown</h3>
+                    <table class="attenuation-table">
+                        <tr>
+                            <td>Geometric Divergence:</td>
+                            <td id="atten-divergence">-</td>
+                        </tr>
+                        <tr>
+                            <td>Atmospheric Absorption:</td>
+                            <td id="atten-atmospheric">-</td>
+                        </tr>
+                        <tr>
+                            <td>Ground Effect:</td>
+                            <td id="atten-ground">-</td>
+                        </tr>
+                        <tr>
+                            <td>Barrier Diffraction:</td>
+                            <td id="atten-barrier">-</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Total Attenuation:</strong></td>
+                            <td id="atten-total">-</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel-section methodology-section">
+                <h3>Methodology</h3>
+                <div class="methodology-content">
+                    <h4>Standards</h4>
+                    <ul>
+                        <li>ISO 9613-2:2024 - Outdoor Sound Propagation</li>
+                        <li>ISO 9613-1:1993 - Atmospheric Absorption</li>
+                    </ul>
+                    
+                    <h4>Church Bell Acoustics</h4>
+                    <p>Bell SPL values based on Valencia Cathedral study (2019), measuring up to 120 dB SPL inside bell towers.</p>
+                    
+                    <h4>Key References</h4>
+                    <ul>
+                        <li>Valencia Cathedral Bell Acoustics (Int. J. Environ. Res. Public Health, 2019)</li>
+                        <li>ISO 9613-2:2024 Updates (Kgeo factor, improved screening)</li>
+                        <li>Archaeoacoustics Research (Frontiers, 2020)</li>
+                    </ul>
+                    
+                    <a href="#references" class="btn-link">Full References →</a>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <!-- References Modal -->
+    <div id="references-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Academic References</h2>
+            
+            <h3>ISO Standards</h3>
+            <ol>
+                <li>ISO 9613-2:2024. Acoustics - Attenuation of sound during propagation outdoors - Part 2: General method of calculation. International Organization for Standardization.</li>
+                <li>ISO 9613-1:1993. Acoustics - Attenuation of sound during propagation outdoors - Part 1: Calculation of the absorption of sound by the atmosphere.</li>
+            </ol>
+            
+            <h3>Church Bell Acoustics</h3>
+            <ol start="3">
+                <li>Ribera, J. E., Zamorano, M., Vergara, L., & LLinares, J. (2019). Valencia's Cathedral Church Bell Acoustics Impact on the Hearing Abilities of Bell Ringers. <em>International Journal of Environmental Research and Public Health</em>, 16(9), 1564. https://doi.org/10.3390/ijerph16091564</li>
+            </ol>
+            
+            <h3>Archaeoacoustics</h3>
+            <ol start="4">
+                <li>Mattioli, T., Díaz-Andreu, M., Armero, J. A., & Messina, P. (2020). Psychology Meets Archaeology: Psychoarchaeoacoustics for Psychological Operations Simulation. <em>Frontiers in Psychology</em>, 11, 969.</li>
+                <li>Rainio, R., Lahelma, A., Äikäs, T., Lassfolk, K., & Okkonen, J. (2018). Acoustic measurements and digital image processing suggest a link between sound rituals and sacred sites in northern Fennoscandia. <em>Journal of Archaeological Method and Theory</em>, 25, 453-474.</li>
+            </ol>
+            
+            <h3>Sound Propagation Models</h3>
+            <ol start="6">
+                <li>Stowell, D., Petrusková, T., Šálek, M., & Linhart, P. (2022). Physics-based model to predict the acoustic detection distance of terrestrial autonomous recording units over the diel cycle and across seasons. <em>arXiv preprint</em> arXiv:2211.16077.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.159.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
