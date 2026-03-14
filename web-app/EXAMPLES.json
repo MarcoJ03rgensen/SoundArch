@@ -1,0 +1,202 @@
+{
+  "examples": [
+    {
+      "name": "Medieval Parish Church (Denmark)",
+      "description": "Typical Danish parish church with medium-sized bell",
+      "location": {
+        "lat": 56.26,
+        "lng": 9.50,
+        "name": "Example location in Jutland"
+      },
+      "parameters": {
+        "temperature_c": 15.0,
+        "humidity_percent": 70.0,
+        "pressure_kpa": 101.325,
+        "ground_factor": 0.5,
+        "source_height_m": 25.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 5800,
+        "audible_radius_km": 5.8,
+        "note": "Typical parish church audibility"
+      },
+      "use_case": "Determine acoustic reach for medieval village analysis"
+    },
+    {
+      "name": "Cathedral Bell (Large European City)",
+      "description": "Large cathedral bell similar to Valencia Cathedral",
+      "location": {
+        "lat": 55.676098,
+        "lng": 12.568337,
+        "name": "Copenhagen Cathedral example"
+      },
+      "parameters": {
+        "temperature_c": 15.0,
+        "humidity_percent": 70.0,
+        "pressure_kpa": 101.325,
+        "ground_factor": 0.3,
+        "source_height_m": 40.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "large_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 8100,
+        "audible_radius_km": 8.1,
+        "note": "Matches field observations of 5 mile audibility"
+      },
+      "use_case": "Model ceremonial bell reach across medieval city"
+    },
+    {
+      "name": "Small Chapel Bell (Village)",
+      "description": "Small chapel in rural setting",
+      "location": {
+        "lat": 56.15,
+        "lng": 10.20,
+        "name": "Rural Denmark example"
+      },
+      "parameters": {
+        "temperature_c": 15.0,
+        "humidity_percent": 70.0,
+        "pressure_kpa": 101.325,
+        "ground_factor": 0.8,
+        "source_height_m": 15.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "small_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 3200,
+        "audible_radius_km": 3.2,
+        "note": "Local village coverage only"
+      },
+      "use_case": "Small community acoustic boundary"
+    },
+    {
+      "name": "Monastery Bell (Elevated Location)",
+      "description": "Monastery on hilltop with excellent propagation",
+      "location": {
+        "lat": 56.30,
+        "lng": 9.45,
+        "name": "Elevated monastery example"
+      },
+      "parameters": {
+        "temperature_c": 15.0,
+        "humidity_percent": 70.0,
+        "pressure_kpa": 101.325,
+        "ground_factor": 0.5,
+        "source_height_m": 30.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 6500,
+        "audible_radius_km": 6.5,
+        "note": "Enhanced by elevated source position"
+      },
+      "use_case": "Monastic soundscape and territorial reach"
+    },
+    {
+      "name": "Cold Weather Propagation",
+      "description": "Winter conditions with enhanced sound travel",
+      "location": {
+        "lat": 56.26,
+        "lng": 9.50,
+        "name": "Winter scenario"
+      },
+      "parameters": {
+        "temperature_c": -5.0,
+        "humidity_percent": 60.0,
+        "pressure_kpa": 102.0,
+        "ground_factor": 0.2,
+        "source_height_m": 25.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 7200,
+        "audible_radius_km": 7.2,
+        "note": "Cold air and frozen ground enhance propagation"
+      },
+      "use_case": "Seasonal variation in acoustic landscape"
+    },
+    {
+      "name": "Hot Summer Day",
+      "description": "Summer conditions with increased atmospheric absorption",
+      "location": {
+        "lat": 56.26,
+        "lng": 9.50,
+        "name": "Summer scenario"
+      },
+      "parameters": {
+        "temperature_c": 25.0,
+        "humidity_percent": 50.0,
+        "pressure_kpa": 101.0,
+        "ground_factor": 0.7,
+        "source_height_m": 25.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 4800,
+        "audible_radius_km": 4.8,
+        "note": "Warm air and soft ground reduce range"
+      },
+      "use_case": "Understanding seasonal soundscape changes"
+    },
+    {
+      "name": "Coastal Church",
+      "description": "Church near coast with hard ground and sea reflection",
+      "location": {
+        "lat": 55.70,
+        "lng": 12.60,
+        "name": "Coastal Denmark"
+      },
+      "parameters": {
+        "temperature_c": 15.0,
+        "humidity_percent": 80.0,
+        "pressure_kpa": 101.325,
+        "ground_factor": 0.1,
+        "source_height_m": 25.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 6200,
+        "audible_radius_km": 6.2,
+        "note": "Hard ground near coast enhances propagation"
+      },
+      "use_case": "Coastal settlement acoustic analysis"
+    },
+    {
+      "name": "Mountain Valley Church",
+      "description": "Church in valley with terrain shielding effects",
+      "location": {
+        "lat": 46.85,
+        "lng": 7.45,
+        "name": "Alpine valley example"
+      },
+      "parameters": {
+        "temperature_c": 10.0,
+        "humidity_percent": 70.0,
+        "pressure_kpa": 95.0,
+        "ground_factor": 0.5,
+        "source_height_m": 20.0,
+        "receiver_height_m": 1.6,
+        "bell_type": "medium_bell"
+      },
+      "expected_results": {
+        "max_distance_m": 4500,
+        "audible_radius_km": 4.5,
+        "note": "Mountains create significant barriers"
+      },
+      "use_case": "Terrain obstruction modeling in mountainous regions"
+    }
+  ],
+  "usage_notes": {
+    "how_to_use": "Copy parameters from examples into the web interface or API",
+    "customization": "Adjust location and parameters for your specific research site",
+    "validation": "Compare results with known historical accounts when available",
+    "uncertainty": "All calculations have ±3 dB uncertainty - use for relative comparisons"
+  }
+}
